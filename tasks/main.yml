@@ -1,0 +1,33 @@
+- name: Install iptables
+  sudo: yes
+  yum:
+    pkg={{item}}
+    state=present
+  with_items: ['iptables', 'iptables-ipv6']
+
+- name: Reset iptables to blank state
+  sudo: yes
+  command: "{{item}}"
+  with_items:
+    - 'iptables -P FORWARD ACCEPT'
+    - 'iptables -P INPUT ACCEPT'
+    - 'iptables -F'
+
+- name: Configure iptables tables
+  sudo: yes
+  command: "iptables -A {{item.table}} {{item.cmd}} -j {{item.action}} -m comment --comment='{{item.comment}}'"
+  with_items:
+    host_iptables_rules
+#  when: iptables_rules.stdout.find('{{item.comment}}') == -1
+  tags: iptables
+
+- name: Save iptables state
+  sudo: yes
+  command: iptables-save
+
+- name: Enable iptables service
+  sudo: yes
+  service:
+    name=iptables
+    enabled=yes
+    state=started

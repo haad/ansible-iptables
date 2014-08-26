@@ -1,0 +1,16 @@
+---
+galaxy_info:
+  author: Adam Hamsik
+  license: MIT
+  min_ansible_version: 1.4
+  platforms:
+    - name: Centos
+      versions:
+        - 5
+        - 6
+
+  categories:
+    - iptables
+    - system
+dependencies: []
+version: 1.0.0
